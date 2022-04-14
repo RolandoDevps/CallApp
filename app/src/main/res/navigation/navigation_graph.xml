@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.callapp.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/callFragment"
+        android:name="com.example.callapp.CallFragment"
+        android:label="call_fragment_item_list"
+        tools:layout="@layout/call_fragment_item_list" />
+
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="com.example.callapp.ContactFragment"
+        android:label="contact_fragment_item_list"
+        tools:layout="@layout/contact_fragment_item_list" />
+</navigation>

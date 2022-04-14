@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CallApp</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="greet_message">Bonjour!</string>
+    <string name="welcome_message">Je suis votre \nassistance \ntéléphonique</string>
+    <string name="about_message">Je vous informe sur vos \nappels et contacts tout en vous permettant de\npasser un appel.</string>
+    <string name="call_spent_time">Call spent time  </string>
+    <string name="caller_name">Caller Name</string>
 </resources>
