@@ -1,13 +1,23 @@
 package com.example.callapp
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
 import com.example.callapp.model.Contact
 
 
@@ -23,12 +33,15 @@ class ContactFragment : Fragment() {
 
     }
 
+    lateinit var mPhoneNumber: String
+    private val MY_PERMISSION_REQUEST_CODE_CALL_PHONE = 555
+    private val LOG_TAG = "Roland-CallApp"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.contact_fragment_item_list, container, false)
-        var mPhoneNumber: String
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
@@ -36,10 +49,53 @@ class ContactFragment : Fragment() {
                 adapter = MycontactRecyclerViewAdapter(defaultContact()) {
                     mPhoneNumber = it.getPhoneNumber().toString()
                     Log.d("Roland:clicked", mPhoneNumber)
+                    Log.d("Roland:Activity", activity.toString())
+                    askPermissionAndCall();
                 }
             }
         }
         return view
+    }
+
+    private fun askPermissionAndCall() {
+
+        // With Android Level >= 23, you have to ask the user
+        // for permission to Call.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // 23
+
+            // Check if we have Call permission
+            val sendSmsPermisson = activity?.let {
+                ActivityCompat.checkSelfPermission(
+                    it.baseContext,
+                    Manifest.permission.CALL_PHONE
+                )
+            }
+            if (sendSmsPermisson != PackageManager.PERMISSION_GRANTED) {
+                // If don't have permission so prompt the user.
+                requestPermissions(
+                    arrayOf(Manifest.permission.CALL_PHONE),
+                    MY_PERMISSION_REQUEST_CODE_CALL_PHONE
+                )
+                return
+            }
+        }
+        this.callNow()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun callNow() {
+        val callIntent = Intent(Intent.ACTION_CALL)
+        callIntent.data = Uri.parse("tel:$mPhoneNumber")
+        try {
+            this.startActivity(callIntent)
+        } catch (ex: Exception) {
+            Toast.makeText(
+                ApplicationProvider.getApplicationContext<Context>(),
+                "Your call failed... " + ex.message,
+                Toast.LENGTH_LONG
+            ).show()
+            ex.printStackTrace()
+        }
     }
 
 
